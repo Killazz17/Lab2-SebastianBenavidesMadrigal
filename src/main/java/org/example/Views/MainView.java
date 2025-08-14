@@ -1,10 +1,16 @@
 package org.example.Views;
 
+import org.example.Controllers.DoctorController;
+import org.example.Models.DoctorModel;
+
 import javax.swing.*;
 
 public class MainView extends JFrame {
     private JPanel contentPanel;
     private JTabbedPane mainTabPanel;
+
+    DoctorView doctorView;
+
 
     public MainView() {
         setTitle("Lab 2");
@@ -15,7 +21,11 @@ public class MainView extends JFrame {
 
         //cargar los paneles de las pestanas
 
-        mainTabPanel.add("Doctor Management", new DoctorView().getContentPanel());
+        DoctorModel doctorModel = new DoctorModel();
+        DoctorView  doctorView= new DoctorView(doctorModel);
+        new DoctorController(doctorModel,doctorView);
+
+        mainTabPanel.add("Doctor Management",  doctorView.getContentPanel());
         mainTabPanel.add("Patients Management",new PatienView().getContentPanel());
         mainTabPanel.add("History",new HistoryView().getContentPanel());
     }
