@@ -5,7 +5,6 @@ import org.example.Models.DoctorModel;
 import org.example.Views.DoctorView;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class DoctorController {
     private final DoctorModel model;
@@ -21,6 +20,10 @@ public class DoctorController {
             if (e.getValueIsAdjusting()) {
                 showSelectedDoctor();
             }
+        });
+        this.view.getUpdateButton().addActionListener(e -> {
+            updateDoctor();
+
         });
 
 
@@ -59,16 +62,43 @@ public class DoctorController {
         model.deleteDoctor(doctorToDelete);
     }
 
-    private void updateDoctor(Doctor doctor) {
-        model.updateDoctor(doctor);
+    private void updateDoctor() {
+        // 1. Obtenemos el doctor original que fue seleccionado
+        Doctor originalDoctor = view.getSelectedDoctor();
+        if (originalDoctor == null) {
+            view.showMessage("Por favor, seleccione un doctor de la tabla para actualizar.");
+            return;
+        }
+
+        // 2. Obtenemos los nuevos datos desde los campos de texto
+        String name = view.getNameTextField().getText().trim();
+        String lastName = view.getLastNameTextField().getText().trim();
+        String ageStr = view.getAgeTextField().getText().trim();
+        String speciality = view.getSpecialityTextField().getText().trim();
+
+        if (name.isEmpty() || lastName.isEmpty() || ageStr.isEmpty() || speciality.isEmpty()) {
+            view.showMessage("Todos los campos deben estar llenos para actualizar.");
+            return;
+        }
+
+        try {
+            int age = Integer.parseInt(ageStr);
+            // 3. Creamos un nuevo objeto Doctor con la información actualizada
+            Doctor updatedDoctor = new Doctor(name, lastName, age, speciality);
+
+            // 4. Le pedimos al modelo que reemplace el original con el actualizado
+            model.updateDoctor(originalDoctor, updatedDoctor);
+
+            view.clearForm(); // Limpiamos el formulario después de actualizar
+            view.showMessage("¡Doctor actualizado exitosamente!");
+
+        } catch (NumberFormatException e) {
+            view.showMessage("La edad debe ser un número válido.");
+        }
     }
 
-    private void clearForm() {
-        view.getNameTextField().setText("");
-        view.getLastNameTextField().setText("");
-        view.getAgeTextField().setText("");
-        view.getSpecialityTextField().setText("");
-    }
+
+
 
     private void showSelectedDoctor() {
         Doctor selectedDoctor = selectDoctor();
@@ -81,11 +111,9 @@ public class DoctorController {
     }
 
     private Doctor selectDoctor() {
-        int selectedRow = view.getTable().getSelectedRow();
-        if (selectedRow >= 0) {
-            return model.getAllDoctors().get(selectedRow);
-        }
-        return null;
+
+        return view.getSelectedDoctor();
+
     }
 
 

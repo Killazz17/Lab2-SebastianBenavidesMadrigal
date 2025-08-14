@@ -24,8 +24,18 @@ public class DoctorModel extends Observable {
         setChanged();
         notifyObservers();
     }
-    public void updateDoctor(Doctor doctor){
-        doctors.set(doctors.indexOf(doctor),doctor);
+    public void updateDoctor(Doctor oldDoctor, Doctor newDoctor){
+        // Encontramos la posición del doctor original en la lista
+        int index = doctors.indexOf(oldDoctor);
+
+        if (index != -1) {
+            // Reemplazamos el objeto en esa posición
+            doctors.set(index, newDoctor);
+
+            // ¡Crucial! Notificamos a las vistas que hubo un cambio.
+            setChanged();
+            notifyObservers();
+        }
     }
     public List<Doctor> getAllDoctors(){
         return doctors;
