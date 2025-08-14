@@ -11,7 +11,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class DoctorView implements Observer {
-    private  JPanel contentPanel;
+    private JPanel contentPanel;
     private JPanel formPanel;
     private JPanel ButtonPanel;
     private JPanel TablePanel;
@@ -42,19 +42,13 @@ public class DoctorView implements Observer {
 
         this.model = model;
         model.addObserver(this);
-        table.getSelectionModel().addListSelectionListener(e->
-        {
-            if (!e.getValueIsAdjusting()){
-                fillFormWhitSelectedDoctor();
-            }
 
-        });
         updateTable(this.model.getAllDoctors());
 
 
     }
 
-    public  JPanel getContentPanel() {
+    public JPanel getContentPanel() {
         return contentPanel;
     }
     //nuevo
@@ -78,12 +72,15 @@ public class DoctorView implements Observer {
     public JTextField getSpecialityTextField() {
         return specialityTextField;
     }
+
     public JButton getCleanButton() {
         return cleanButton;
     }
+
     public JButton getUpdateButton() {
         return updateButton;
     }
+
     public JButton getDeleteButton() {
         return deleteButton;
     }
@@ -97,14 +94,16 @@ public class DoctorView implements Observer {
         JOptionPane.showMessageDialog(null, message);
         return message;
     }
+
     public void clearForm() {
         nameTextField.setText("");
         lastNameTextField.setText("");
         ageTextField.setText("");
         specialityTextField.setText("");
     }
+
     private void updateTable(List<Doctor> doctors) {
-        DoctorsTableModel tableModel=new DoctorsTableModel(doctors);
+        DoctorsTableModel tableModel = new DoctorsTableModel(doctors);
         table.setModel(tableModel);
         ((AbstractTableModel) table.getModel()).fireTableDataChanged();
     }
@@ -112,12 +111,13 @@ public class DoctorView implements Observer {
     //Este es un metodo llamado automaticamente cuando el Modelo notifica cambios
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof DoctorModel){
+        if (o instanceof DoctorModel) {
             DoctorModel doctorModel = (DoctorModel) o;
-            updateTable( doctorModel.getAllDoctors());
+            updateTable(doctorModel.getAllDoctors());
         }
 
     }
+
     public Doctor getSelectedDoctor() {
         int row = table.getSelectedRow();
         if (row >= 0) {
@@ -126,7 +126,7 @@ public class DoctorView implements Observer {
         return null;
     }
 
-    private void fillFormWhitSelectedDoctor(){
+    public void fillFormWhitSelectedDoctor() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) { // -1 significa que no hay ninguna fila seleccionada
             Doctor selectedDoctor = this.model.getAllDoctors().get(selectedRow);

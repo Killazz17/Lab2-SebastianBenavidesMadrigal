@@ -25,6 +25,13 @@ public class DoctorController {
             updateDoctor();
 
         });
+        view.getTable().getSelectionModel().addListSelectionListener(e->
+        {
+            if (!e.getValueIsAdjusting()){
+                view.fillFormWhitSelectedDoctor();
+            }
+
+        });
 
 
     }
